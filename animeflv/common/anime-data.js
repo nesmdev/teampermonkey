@@ -16,6 +16,7 @@ async function getAnimeData(url) {
 
 		return {
 			nextChapter: nextChapter,
+			days: nextChapter && nextChapter.days || null,
 			title: title,
 			image: image,
 			description: description,
