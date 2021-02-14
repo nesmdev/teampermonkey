@@ -1,12 +1,14 @@
-<a href="{{url}}">
-	<figure>
-		<img
-			src="{{image}}"
-			alt="{{title}}"
-			title="{{title}}\n\n{{description}}"
-		/>
-		<figcaption>{{title}}</figcaption>
-	</figure>
-</a>
-<span title="{{fecha}}" style="float: left">{{days}}</span>
-<span style="float: right"><small>Rating: {{rating}}%</small></span>
+<li class="{{dayClass}}" style="display: list-item">
+	<a href="{{link}}">
+		<figure>
+			<img
+				src="{{image}}"
+				alt="{{title}}"
+				title="{{title}}\n\n{{description}}"
+			/>
+			<figcaption>{{title}}</figcaption>
+		</figure>
+	</a>
+	<span title="{{fecha}}" style="float: left" class="days">{{days}}</span>
+	<span style="float: right"><small>Rating: {{rating}}%</small></span>
+</li>
