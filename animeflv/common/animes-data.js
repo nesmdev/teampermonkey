@@ -34,11 +34,12 @@ async function getFollowingAnimesData(username, options) {
 				link: link,
 			};
 
-			if(options.max && options.max>=animes.length){
+			if (options && options.max && options.max >= animes.length) {
 				break;
 			}
 
 			if (
+				!options ||
 				!options.solo_estrenos ||
 				(options.solo_estrenos && animeData.estreno)
 			) {
