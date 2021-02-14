@@ -11,7 +11,7 @@
 // });
 
 async function getFollowingAnimesData(username, options) {
-	//options => solo_estrenos:boolean,
+	//options => solo_estrenos:boolean, max:number
 	const url = `https://www3.animeflv.net/perfil/${username}/siguiendo`;
 	async function response(html) {
 		var animes = [];
@@ -33,6 +33,11 @@ async function getFollowingAnimesData(username, options) {
 				vts: vts && parseInt(vts),
 				link: link,
 			};
+
+			if(options.max && options.max>=animes.length){
+				break;
+			}
+
 			if (
 				!options.solo_estrenos ||
 				(options.solo_estrenos && animeData.estreno)
