@@ -34,7 +34,7 @@ async function getFollowingAnimesData(username, options) {
 				link: link,
 			};
 
-			if (options && options.max && options.max >= animes.length) {
+			if (options && options.max && options.max <= animes.length) {
 				break;
 			}
 
