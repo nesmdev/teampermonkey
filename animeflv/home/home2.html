@@ -1,7 +1,12 @@
 <a href="{{url}}">
 	<figure>
-		<img src="{{image}}" alt="{{title}}" />
+		<img
+			src="{{image}}"
+			alt="{{title}}"
+			title="{{title}}\n\n{{description}}"
+		/>
 		<figcaption>{{title}}</figcaption>
 	</figure>
 </a>
-<span title="{{fecha}}">{{days}}</span>
+<span title="{{fecha}}" style="float: left">{{days}}</span>
+<span style="float: right"><small>Rating: {{rating}}%</small></span>

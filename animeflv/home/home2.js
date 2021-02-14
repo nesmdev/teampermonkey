@@ -13,47 +13,29 @@
 // ==/UserScript==
 
 const thumbTpl = `
-<a href="{{url}}">
+<a href="{{link}}">
 	<figure>
-		<img src="{{image}}" alt="{{title}}" title="{{message}}"/>
+		<img
+			src="{{image}}"
+			alt="{{title}}"
+			title="{{title}}\n\n{{description}}"
+		/>
 		<figcaption>{{title}}</figcaption>
 	</figure>
 </a>
-<span title="{{fecha}}">{{days}}</span>
+<span title="{{fecha}}" style="float: left">{{days}}</span>
+<span style="float: right"><small>Rating: {{rating}}%</small></span>
+
 `;
 
 const $thumbnails = $(".ListAnmsTp.ClFx:first li");
 
 const username = $(".Login.Online strong").text().trim();
 
-function sortAnimes_(animes, prop, desc, print) {
-	//options => asc:boolean, prop:string
-
-	const escape_ = (val) => {
-		if (typeof val !== "number" && typeof val !== "string") {
-			return Infinity;
-		} else {
-			return val;
-		}
-	};
-	let animes_ = animes.sort((a, b) => {
-		let escapeA = escape_(a[prop]);
-		let escapeB = escape_(b[prop]);
-		let res = escapeA < escapeB ? -1 : escapeA > escapeB ? 1 : 0;
-		// let res = escape_(a[prop]) - escape_(b[prop]);
-		if (print) {
-			console.log("a", escapeA);
-			console.log("b", escapeB);
-			console.log("res", res);
-		}
-		return res;
-	});
-	return desc ? animes_.reverse() : animes_;
-}
 
 if (username) {
 	getFollowingAnimesData(username, { solo_estrenos: true }).then((animes) => {
-		var animes_ = sortAnimes_(animes, "days");
+		var animes_ = sortAnimes(animes, "days");
 		ANIMES = animes_;
 		animes_.forEach((anime, i) => {
 			const days = anime.nextChapter && anime.nextChapter.days;
@@ -69,14 +51,23 @@ if (username) {
 					? "Ayer"
 					: `En ${days} días`;
 			const message = `${anime.title}\n\n${anime.description}`;
-			const thumb = thumbTpl
-				.replace("{{url}}", anime.link)
-				.replace("{{image}}", anime.image)
-				.replaceAll("{{title}}", anime.title)
-				.replace("{{days}}", days_)
-				.replace("{{fecha}}", anime.nextChapter.fecha)
-				.replace("{{message}}", message);
+			// const thumb = thumbTpl
+			// 	.replace("{{url}}", anime.link)
+			// 	.replace("{{image}}", anime.image)
+			// 	.replaceAll("{{title}}", anime.title)
+			// 	.replace("{{days}}", days_)
+			// 	.replace("{{fecha}}", anime.nextChapter.fecha)
+			// 	.replace("{{message}}", message);
+
+			const thumb = new nhtml(thumbTpl)
+				.setVal({
+					...anime,
+					days: days_,
+					fecha: anime.nextChapter?.fecha,
+				})
+				.value();
 			$thumbnails.eq(i).hide().html(thumb).fadeIn(3000);
 		});
 	});
 }
+

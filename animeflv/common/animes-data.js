@@ -58,7 +58,7 @@ async function getFollowingAnimesData(username, options) {
 	return $.get(url).then((html) => response(html));
 }
 
-function sortAnimes(animes, prop, desc) {
+function sortAnimes(animes, prop, desc, print) {
 	//options => asc:boolean, prop:string
 
 	const escape_ = (val) => {
@@ -68,7 +68,17 @@ function sortAnimes(animes, prop, desc) {
 			return val;
 		}
 	};
-	return animes.sort((a, b) => {
-		return escape_(a[prop]) - escape_(b[prop]);
+	let animes_ = animes.sort((a, b) => {
+		let escapeA = escape_(a[prop]);
+		let escapeB = escape_(b[prop]);
+		let res = escapeA < escapeB ? -1 : escapeA > escapeB ? 1 : 0;
+		// let res = escape_(a[prop]) - escape_(b[prop]);
+		if (print) {
+			console.log("a", escapeA);
+			console.log("b", escapeB);
+			console.log("res", res);
+		}
+		return res;
 	});
+	return desc ? animes_.reverse() : [...animes_];
 }
