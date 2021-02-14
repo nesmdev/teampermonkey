@@ -26,33 +26,57 @@ const $thumbnails = $(".ListAnmsTp.ClFx:first li");
 
 const username = $(".Login.Online strong").text().trim();
 
+function sortAnimes_(animes, prop, desc, print) {
+	//options => asc:boolean, prop:string
+
+	const escape_ = (val) => {
+		if (typeof val !== "number" && typeof val !== "string") {
+			return Infinity;
+		} else {
+			return val;
+		}
+	};
+	let animes_ = animes.sort((a, b) => {
+		let escapeA = escape_(a[prop]);
+		let escapeB = escape_(b[prop]);
+		let res = escapeA < escapeB ? -1 : escapeA > escapeB ? 1 : 0;
+		// let res = escape_(a[prop]) - escape_(b[prop]);
+		if (print) {
+			console.log("a", escapeA);
+			console.log("b", escapeB);
+			console.log("res", res);
+		}
+		return res;
+	});
+	return desc ? animes_.reverse() : animes_;
+}
 
 if (username) {
-	getFollowingAnimesData(username, { solo_estrenos: false, max: 6 }).then(
-		(animes) => {
-			var animes_ = sortAnimes(animes, "days");
-			ANIMES = animes_; 
-			animes_.forEach((anime, i) => {
-				const days = anime.nextChapter && anime.nextChapter.days;
+	getFollowingAnimesData(username, { solo_estrenos: true }).then((animes) => {
+		var animes_ = sortAnimes_(animes, "days");
+		ANIMES = animes_;
+		animes_.forEach((anime, i) => {
+			const days = anime.nextChapter && anime.nextChapter.days;
 
-				const days_ =
-					typeof days !== "number"
-						? ""
-						: days == 0
-						? "Hoy"
-						: days == 1
-						? "Mañana"
-						: `En ${days} días`;
-				const message = `${anime.title}\n\n${anime.description}`;
-				const thumb = thumbTpl
-					.replace("{{url}}", anime.link)
-					.replace("{{image}}", anime.image)
-					.replaceAll("{{title}}", anime.title)
-					.replace("{{days}}", days_)
-					.replace("{{fecha}}", anime.nextChapter.fecha)
-					.replace("{{message}}", message);
-				$thumbnails.eq(i).hide().html(thumb).fadeIn(3000);
-			});
-		}
-	);
+			const days_ =
+				typeof days !== "number"
+					? ""
+					: days == 0
+					? "Hoy"
+					: days == 1
+					? "Mañana"
+					: days == -1
+					? "Ayer"
+					: `En ${days} días`;
+			const message = `${anime.title}\n\n${anime.description}`;
+			const thumb = thumbTpl
+				.replace("{{url}}", anime.link)
+				.replace("{{image}}", anime.image)
+				.replaceAll("{{title}}", anime.title)
+				.replace("{{days}}", days_)
+				.replace("{{fecha}}", anime.nextChapter.fecha)
+				.replace("{{message}}", message);
+			$thumbnails.eq(i).hide().html(thumb).fadeIn(3000);
+		});
+	});
 }
