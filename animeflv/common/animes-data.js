@@ -57,3 +57,18 @@ async function getFollowingAnimesData(username, options) {
 	}
 	return $.get(url).then((html) => response(html));
 }
+
+function sortAnimes(animes, prop, desc) {
+	//options => asc:boolean, prop:string
+
+	const escape_ = (val) => {
+		if (typeof val !== "number" && typeof val !== "string") {
+			return Infinity;
+		} else {
+			return val;
+		}
+	};
+	return animes.sort((a, b) => {
+		return escape_(a[prop]) - escape_(b[prop]);
+	});
+}
