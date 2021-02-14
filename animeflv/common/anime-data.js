@@ -1,6 +1,5 @@
 // https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // https://nesmdev.github.io/ndev/ndev.1.0.1.js
- 
 
 var anime_info, episodes, last_seen;
 async function getAnimeData(url) {
@@ -16,7 +15,10 @@ async function getAnimeData(url) {
 
 		return {
 			nextChapter: nextChapter,
-			days: nextChapter && nextChapter.days || null,
+			days:
+				nextChapter && typeof nextChapter.days == "number"
+					? nextChapter.days
+					: null,
 			title: title,
 			image: image,
 			description: description,
